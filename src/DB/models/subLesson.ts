@@ -9,7 +9,7 @@ const subLessonSchema = new Schema<subLessonDB>({
     aName : {type : String},
     number : {type : Number},
     lesson : {type : mongoose.Types.ObjectId , ref : 'lessons'},
-    content : {type : mongoose.Types.ObjectId , ref : 'contents'},
+    content : {type : mongoose.Types.ObjectId , ref : 'contents' , default : null},
     seen:[String],
     subLessons:[{
         eName : {type:String},
@@ -22,5 +22,5 @@ const subLessonSchema = new Schema<subLessonDB>({
 
 
 const subLessonModel = model<subLessonDB>('subLessons' , subLessonSchema)
-
+ 
 export default subLessonModel

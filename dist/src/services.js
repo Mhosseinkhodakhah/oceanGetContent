@@ -49,7 +49,7 @@ class contentService {
             const english = yield lesson_1.default.find().populate({
                 path: 'sublessons',
                 populate: [{
-                        path: 'subLessons'
+                        path: 'subLessons',
                     }, { path: 'content' }],
                 select: ['-name', '-aName']
             }).select(['-name', '-aName']);

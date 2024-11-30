@@ -18,5 +18,4 @@ export default class interServiceController {
         return next(new response(req , res , 'reset cache for content service' , 200 , null , 'cache reseted successfull . . .'))
     }
 
-    
 }

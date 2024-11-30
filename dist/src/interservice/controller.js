@@ -27,6 +27,7 @@ class interServiceController {
     }
     resetCache(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('its hereeeeeeeeee');
             yield cach_1.default.reset();
             return next(new responseService_1.response(req, res, 'reset cache for content service', 200, null, 'cache reseted successfull . . .'));
         });

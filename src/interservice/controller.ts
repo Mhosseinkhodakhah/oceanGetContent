@@ -14,6 +14,7 @@ export default class interServiceController {
     }
 
     async resetCache(req: any, res: any, next: any){
+        console.log('its hereeeeeeeeee')
         await cacher.reset()
         return next(new response(req , res , 'reset cache for content service' , 200 , null , 'cache reseted successfull . . .'))
     }

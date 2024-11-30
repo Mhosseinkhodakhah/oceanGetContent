@@ -48,23 +48,23 @@ class contentService {
         return __awaiter(this, void 0, void 0, function* () {
             const english = yield lesson_1.default.find().populate({
                 path: 'sublessons',
-                populate: [{
-                        path: 'subLessons',
-                    }, { path: 'content' }],
+                populate: {
+                    path: 'subLessons',
+                },
                 select: ['-name', '-aName']
             }).select(['-name', '-aName']);
             const arabic = yield lesson_1.default.find().populate({
                 path: 'sublessons',
-                populate: [{
-                        path: 'subLessons',
-                    }, { path: 'content' }],
+                populate: {
+                    path: 'subLessons',
+                },
                 select: ['-name', '-eName']
             }).select(['-name', '-eName']);
             const persian = yield lesson_1.default.find().populate({
                 path: 'sublessons',
-                populate: [{
-                        path: 'subLessons',
-                    }, { path: 'content' }],
+                populate: {
+                    path: 'subLessons',
+                },
                 select: ['-eName', '-aName']
             }).select(['-eName', '-aName']);
             return { persian: persian, arabic: arabic, english: english };

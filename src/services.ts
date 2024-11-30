@@ -40,25 +40,25 @@ export default class contentService {
     async makeReadyData() {
         const english = await lessonModel.find().populate({
             path: 'sublessons',
-            populate: [{
+            populate: {
                 path: 'subLessons',
-            } , {path : 'content'}],
+            } ,
             select: ['-name', '-aName']
         }).select(['-name', '-aName'])
 
         const arabic = await lessonModel.find().populate({
             path: 'sublessons',
-            populate: [{
+            populate: {
                 path: 'subLessons',
-            } , {path : 'content'}],
+            } ,
             select: ['-name', '-eName']
         }).select(['-name', '-eName'])  
 
         const persian = await lessonModel.find().populate({
             path: 'sublessons',
-            populate: [{
+            populate: {
                 path: 'subLessons',
-            } , {path : 'content'}],
+            } ,
             select: ['-eName', '-aName']
         }).select(['-eName', '-aName'])
 

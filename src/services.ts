@@ -41,7 +41,7 @@ export default class contentService {
         const english = await lessonModel.find().populate({
             path: 'sublessons',
             populate: {
-                path: 'subLessons',
+                path: 'subLessons content',
             },
             select: ['-name', '-aName']
         }).select(['-name', '-aName'])
@@ -49,7 +49,7 @@ export default class contentService {
         const arabic = await lessonModel.find().populate({
             path: 'sublessons',
             populate: {
-                path: 'subLessons',
+                path: 'subLessons content',
             },
             select: ['-name', '-eName']
         }).select(['-name', '-eName'])
@@ -57,7 +57,7 @@ export default class contentService {
         const persian = await lessonModel.find().populate({
             path: 'sublessons',
             populate: {
-                path: 'subLessons',
+                path: 'subLessons content',
             },
             select: ['-eName', '-aName']
         }).select(['-eName', '-aName'])

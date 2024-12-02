@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const content_1 = __importDefault(require("../DB/models/content"));
 const lesson_1 = __importDefault(require("../DB/models/lesson"));
+const level_1 = __importDefault(require("../DB/models/level"));
 const cach_1 = __importDefault(require("../service/cach"));
 const responseService_1 = require("../service/responseService");
 class interServiceController {
@@ -36,7 +37,21 @@ class interServiceController {
     getHeaderData(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const lessons = yield lesson_1.default.find();
-            return next(new responseService_1.response(req, res, 'get header data interservice', 200, null, lessons));
+            const levels = yield level_1.default.find();
+            let level = [];
+            let values = [];
+            levels.forEach(elem => {
+                level.push(elem.number);
+                values.push(elem.passedUsers.length);
+            });
+            const barChart = {
+                levels: level,
+                series: [
+                    { name: '2022', data: values },
+                    { name: '2023', data: values },
+                ]
+            };
+            return next(new responseService_1.response(req, res, 'get header data interservice', 200, null, { lessons: lessons, levelData: barChart }));
         });
     }
 }

@@ -9,4 +9,5 @@ const interservice = (0, express_1.Router)();
 const controller = new controller_1.default;
 interservice.put('/put-content-photo/:contentId', controller.putPhoto);
 interservice.put('/reset-cache', controller.resetCache);
+interservice.get('/get-data-for-headers', controller.getHeaderData);
 exports.default = interservice;

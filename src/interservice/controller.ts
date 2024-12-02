@@ -1,4 +1,5 @@
 import contentModel from "../DB/models/content";
+import lessonModel from "../DB/models/lesson";
 import cacher from "../service/cach";
 import { response } from "../service/responseService";
 
@@ -18,5 +19,11 @@ export default class interServiceController {
         await cacher.reset()
         return next(new response(req , res , 'reset cache for content service' , 200 , null , 'cache reseted successfull . . .'))
     }
+
+    async getHeaderData(req: any, res: any, next: any){
+        const lessons = await lessonModel.find()
+        return next(new response(req , res, 'get header data interservice' , 200 , null , lessons))
+    }
+
 
 }

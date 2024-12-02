@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const content_1 = __importDefault(require("../DB/models/content"));
+const lesson_1 = __importDefault(require("../DB/models/lesson"));
 const cach_1 = __importDefault(require("../service/cach"));
 const responseService_1 = require("../service/responseService");
 class interServiceController {
@@ -30,6 +31,12 @@ class interServiceController {
             console.log('its hereeeeeeeeee');
             yield cach_1.default.reset();
             return next(new responseService_1.response(req, res, 'reset cache for content service', 200, null, 'cache reseted successfull . . .'));
+        });
+    }
+    getHeaderData(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const lessons = yield lesson_1.default.find();
+            return next(new responseService_1.response(req, res, 'get header data interservice', 200, null, lessons));
         });
     }
 }

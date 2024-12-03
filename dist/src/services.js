@@ -46,28 +46,92 @@ class contentService {
      */
     makeReadyData() {
         return __awaiter(this, void 0, void 0, function* () {
-            const english = yield lesson_1.default.find().populate({
+            let allLessons;
+            allLessons = yield lesson_1.default.find().populate({
                 path: 'sublessons',
                 populate: {
                     path: 'subLessons',
-                },
-                select: ['-name', '-aName']
-            }).select(['-name', '-aName']);
-            const arabic = yield lesson_1.default.find().populate({
-                path: 'sublessons',
-                populate: {
-                    path: 'subLessons',
-                },
-                select: ['-name', '-eName']
-            }).select(['-name', '-eName']);
-            const persian = yield lesson_1.default.find().populate({
-                path: 'sublessons',
-                populate: {
-                    path: 'subLessons',
-                },
-                select: ['-eName', '-aName']
-            }).select(['-eName', '-aName']);
+                }
+            });
+            let english = [];
+            let arabic = [];
+            let persian = [];
+            for (let i = 0; i < allLessons.length; i++) {
+                let lesson = allLessons[i].toObject();
+                lesson.name = lesson.eName;
+                if (lesson.sublessons) {
+                    let newSubLessons = lesson.sublessons.map((elem) => {
+                        elem.name = elem.eName;
+                        if (elem.subLessons) {
+                            let newSub2 = elem.subLessons.map((element) => {
+                                element.name = element.eName;
+                                return element;
+                            });
+                            elem.subLessons = newSub2;
+                        }
+                        return elem;
+                    });
+                    lesson.sublessons = newSubLessons;
+                }
+                english.push(lesson);
+            }
+            for (let i = 0; i < allLessons.length; i++) {
+                let lesson = allLessons[i].toObject();
+                lesson.name = lesson.aName;
+                if (lesson.sublessons) {
+                    let newSubLessons = lesson.sublessons.map((elem) => {
+                        elem.name = elem.aName;
+                        if (elem.subLessons) {
+                            let newSub2 = elem.subLessons.map((element) => {
+                                element.name = element.aName;
+                                return element;
+                            });
+                            elem.subLessons = newSub2;
+                        }
+                        return elem;
+                    });
+                    lesson.sublessons = newSubLessons;
+                }
+                arabic.push(lesson);
+            }
+            for (let i = 0; i < allLessons.length; i++) {
+                let lesson = allLessons[i].toObject();
+                persian.push(lesson);
+            }
             return { persian: persian, arabic: arabic, english: english };
+        });
+    }
+    makeContentReady(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f;
+            const contents = yield content_1.default.findById(id);
+            // let english : {} = 
+            // let arabic : {} = 
+            // let persian : {} = 
+            console.log('in the services');
+            if (!contents) {
+                return false;
+            }
+            const englishInternalContent = {
+                title: (_a = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _a === void 0 ? void 0 : _a.eTitle,
+                describtion: (_b = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _b === void 0 ? void 0 : _b.eDescribtion
+            };
+            const arabicInternalContent = {
+                title: (_c = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _c === void 0 ? void 0 : _c.aTitle,
+                describtion: (_d = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _d === void 0 ? void 0 : _d.aDescribtion
+            };
+            const persianInternalContent = {
+                title: (_e = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _e === void 0 ? void 0 : _e.title,
+                describtion: (_f = contents === null || contents === void 0 ? void 0 : contents.internalContent) === null || _f === void 0 ? void 0 : _f.describtion
+            };
+            const englishPicture = contents === null || contents === void 0 ? void 0 : contents.ePictures;
+            const arabichPicture = contents === null || contents === void 0 ? void 0 : contents.aPictures;
+            const persianPicture = contents === null || contents === void 0 ? void 0 : contents.pictures;
+            console.log('passed here . . .');
+            let english = Object.assign(Object.assign({}, contents === null || contents === void 0 ? void 0 : contents.toObject()), { internalContent: englishInternalContent, pictures: englishPicture });
+            let arabic = Object.assign(Object.assign({}, contents === null || contents === void 0 ? void 0 : contents.toObject()), { internalContent: arabicInternalContent, pictures: arabichPicture });
+            let persian = Object.assign(Object.assign({}, contents === null || contents === void 0 ? void 0 : contents.toObject()), { internalContent: persianInternalContent, pictures: persianPicture });
+            return { persian: persian, english: english, arabic: arabic };
         });
     }
     /**

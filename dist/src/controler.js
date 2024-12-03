@@ -67,12 +67,26 @@ class contentController {
     getSubLesson(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const language = req.params.lang;
-            let sublessonContent;
-            sublessonContent = yield content_1.default.findById(req.params.contentId);
-            if (!sublessonContent) {
-                return next(new responseService_1.response(req, res, 'get specific subLesson', 400, 'this content is not exist', null));
+            let finalData = {};
+            const data = yield services.makeContentReady(req.params.contentId);
+            if (!data) {
+                return next(new responseService_1.response(req, res, 'get specific content', 204, 'this content is not exist on database', null));
             }
-            return next(new responseService_1.response(req, res, 'get specific subLesson', 200, null, sublessonContent));
+            console.log('passed from cache heat', data);
+            switch (language) {
+                case 'persian':
+                    finalData = data === null || data === void 0 ? void 0 : data.persian;
+                    break;
+                case 'english':
+                    finalData = data === null || data === void 0 ? void 0 : data.english;
+                    break;
+                case 'arabic':
+                    finalData = data === null || data === void 0 ? void 0 : data.arabic;
+                    break;
+                default:
+                    return next(new responseService_1.response(req, res, 'get specific content', 400, 'please first select the language on request . . .', null));
+            }
+            return next(new responseService_1.response(req, res, 'get specific subLesson', 200, null, finalData));
         });
     }
     getContent(req, res, next) {

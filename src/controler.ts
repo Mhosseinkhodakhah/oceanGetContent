@@ -71,13 +71,28 @@ export default class contentController {
 
     async getSubLesson(req: any, res: any, next: any) {
         const language = req.params.lang;
-        let sublessonContent;
-        sublessonContent = await contentModel.findById( req.params.contentId)
-        if (!sublessonContent){
-            return next(new response(req, res, 'get specific subLesson', 400, 'this content is not exist', null))
+        let finalData : {} = {};
+        const data = await services.makeContentReady(req.params.contentId)
+        if (!data) {
+            return next(new response(req, res, 'get specific content', 204, 'this content is not exist on database', null))
+        }
+        console.log('passed from cache heat', data)
+        switch (language) {
+            case 'persian':
+                finalData = data?.persian
+                break;
+            case 'english':
+                finalData = data?.english
+                break;
+            case 'arabic':
+                finalData = data?.arabic
+                break;
+
+            default:
+                return next(new response(req, res, 'get specific content', 400 , 'please first select the language on request . . .', null))
         }
 
-        return next(new response(req, res, 'get specific subLesson', 200, null, sublessonContent))
+        return next(new response(req, res, 'get specific subLesson', 200, null, finalData))
     }
 
 
@@ -89,9 +104,9 @@ export default class contentController {
     }
 
 
-    async getAllContent(req: any, res: any, next: any){
+    async getAllContent(req: any, res: any, next: any) {
         const contents = await contentModel.find()
-        return next (new response(req , res , 'get contents' , 200 , null , contents))
+        return next(new response(req, res, 'get contents', 200, null, contents))
     }
 
 

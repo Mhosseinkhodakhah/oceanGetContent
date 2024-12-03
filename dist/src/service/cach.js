@@ -32,6 +32,7 @@ class internalCache {
     }
     setter(key, val) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(key, val);
             return __classPrivateFieldGet(this, _internalCache_cacher, "f").set(key, val);
         });
     }

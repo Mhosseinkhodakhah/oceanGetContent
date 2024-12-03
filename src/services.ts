@@ -38,32 +38,111 @@ export default class contentService {
      * this module seprate a languages for caching all lessons data
      */
     async makeReadyData() {
-        const english = await lessonModel.find().populate({
-            path: 'sublessons',
-            populate: {
-                path: 'subLessons',
-            } ,
-            select: ['-name', '-aName']
-        }).select(['-name', '-aName'])
+        let allLessons;
 
-        const arabic = await lessonModel.find().populate({
+        allLessons = await lessonModel.find().populate({
             path: 'sublessons',
             populate: {
                 path: 'subLessons',
-            } ,
-            select: ['-name', '-eName']
-        }).select(['-name', '-eName'])  
+            }
+        })
 
-        const persian = await lessonModel.find().populate({
-            path: 'sublessons',
-            populate: {
-                path: 'subLessons',
-            } ,
-            select: ['-eName', '-aName']
-        }).select(['-eName', '-aName'])
+        let english: {}[] = [];
+        let arabic: {}[] = []
+        let persian: {}[] = []
+
+
+        for (let i = 0; i < allLessons.length; i++) {
+            let lesson = allLessons[i].toObject()
+            lesson.name = lesson.eName
+            if (lesson.sublessons) {
+                let newSubLessons = lesson.sublessons.map((elem: any) => {
+                    elem.name = elem.eName;
+                    if (elem.subLessons) {
+                        let newSub2 = elem.subLessons.map((element: any) => {
+                            element.name = element.eName;
+                            return element
+                        })
+                        elem.subLessons = newSub2
+                    }
+                    return elem
+                })
+                lesson.sublessons = newSubLessons
+            }
+            english.push(lesson)
+        }
+
+
+        for (let i = 0; i < allLessons.length; i++) {
+            let lesson = allLessons[i].toObject()
+            lesson.name = lesson.aName
+            if (lesson.sublessons) {
+                let newSubLessons = lesson.sublessons.map((elem: any) => {
+                    elem.name = elem.aName;
+                    if (elem.subLessons) {
+                        let newSub2 = elem.subLessons.map((element: any) => {
+                            element.name = element.aName;
+                            return element
+                        })
+                        elem.subLessons = newSub2
+                    }
+                    return elem
+                })
+                lesson.sublessons = newSubLessons
+            }
+            arabic.push(lesson)
+        }
+
+
+        for (let i = 0; i < allLessons.length; i++) {
+            let lesson = allLessons[i].toObject()
+
+            persian.push(lesson)
+        }
 
         return { persian: persian, arabic: arabic, english: english }
     }
+
+
+
+    async makeContentReady(id: string) {
+        const contents = await contentModel.findById(id)
+        // let english : {} = 
+        // let arabic : {} = 
+        // let persian : {} = 
+        console.log('in the services')
+        if (!contents){
+            return false
+        }
+        const englishInternalContent = {
+            title : contents?.internalContent?.eTitle,
+            describtion : contents?.internalContent?.eDescribtion
+        }
+        const arabicInternalContent = {
+            title : contents?.internalContent?.aTitle,
+            describtion : contents?.internalContent?.aDescribtion
+        }
+        const persianInternalContent = {
+            title : contents?.internalContent?.title,
+            describtion : contents?.internalContent?.describtion
+        }
+
+        const englishPicture = contents?.ePictures
+        const arabichPicture = contents?.aPictures
+        const persianPicture = contents?.pictures
+
+        console.log('passed here . . .')
+
+        let english = {...contents?.toObject() , internalContent : englishInternalContent , pictures : englishPicture}
+        let arabic = {...contents?.toObject() , internalContent : arabicInternalContent , pictures : arabichPicture}
+        let persian = {...contents?.toObject() , internalContent : persianInternalContent , pictures : persianPicture}
+       
+
+        return {persian : persian , english : english , arabic : arabic}
+    }
+
+
+
 
     /**
      * this mudule seprate data based on the languages for caching just sublessons data

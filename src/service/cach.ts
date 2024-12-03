@@ -9,6 +9,7 @@ class internalCache {
 
 
     async setter(key: string, val: {}) {
+        console.log(key , val)
         return this.#cacher.set(key, val)
 
     }

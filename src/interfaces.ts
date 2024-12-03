@@ -44,7 +44,7 @@ export interface subLessonDB {
     lesson: any,
     content: {},
     seen: string[]
-    subLessons: { eName: string, number: number, _id: any, content: any }[]
+    subLessons: { eName: string , name : string , aName : string, number: number, _id: any, content: any }[]
 }
 
 

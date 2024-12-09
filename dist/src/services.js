@@ -170,5 +170,32 @@ class contentService {
             return allLevels;
         });
     }
+    getLessonForAdmin() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const lessons = yield lesson_1.default.find();
+            const sublessons = yield subLesson_1.default.find().populate('lesson');
+            let data = [];
+            let sub2Lessons = [];
+            lessons.forEach((element) => {
+                let objectLesson = element.toObject();
+                data.push(Object.assign(Object.assign({}, objectLesson), { levels: [], path: [objectLesson.name], sublessons: [] }));
+            });
+            sublessons.forEach((elem) => {
+                let objectData = elem.toObject();
+                let innerSub = [];
+                if (elem.subLessons.length) {
+                    elem.subLessons.forEach((elem2) => {
+                        elem2 = elem2.toObject();
+                        sub2Lessons.push(Object.assign(Object.assign({}, elem2), { path: [objectData.lesson.name, elem.name, elem2.eName] }));
+                    });
+                }
+                data.push(Object.assign(Object.assign({}, objectData), { lesson: [], subLessons: [], path: [objectData.lesson.name, elem.name] }));
+            });
+            sub2Lessons.forEach((elem3) => {
+                data.push(elem3);
+            });
+            return data;
+        });
+    }
 }
 exports.default = contentService;

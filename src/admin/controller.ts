@@ -7,7 +7,10 @@ import levelModel from "../DB/models/level"
 import questionModel from "../DB/models/questions"
 import internalCache from "../service/cach"
 import cacher from "../service/cach"
+import contentService from "../services"
 
+
+const service = new contentService()
 
 
 export default class adminController {
@@ -55,13 +58,7 @@ export default class adminController {
         if (cacheData) {
             finalData = cacheData;
         } else {
-            const lessons = await lessonModel.find().populate({
-                path: 'sublessons',
-                populate: {
-                    path: 'contents',
-                    select: 'internalContent',
-                }
-            })
+            const lessons = await service.getLessonForAdmin()
             await cacher.setter('admin-getLessons', lessons)
             finalData = lessons
         }

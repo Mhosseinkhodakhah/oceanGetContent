@@ -9,7 +9,7 @@ const controller_1 = __importDefault(require("./controller"));
 const adminRouter = (0, express_1.Router)();
 const adminAuth = new middleware_1.default().adminAuth;
 const controller = new controller_1.default();
-adminRouter.get('/get-lessons', adminAuth, controller.getLessons);
+adminRouter.get('/get-lessons', controller.getLessons);
 adminRouter.get('/get-sublessons/:sublessonId', adminAuth, controller.getSubLesson);
 adminRouter.get('/get-content/:contentId', adminAuth, controller.getContent);
 exports.default = adminRouter;

@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const responseService_1 = require("../service/responseService");
-const lesson_1 = __importDefault(require("../DB/models/lesson"));
 const subLesson_1 = __importDefault(require("../DB/models/subLesson"));
 const content_1 = __importDefault(require("../DB/models/content"));
 const cach_1 = __importDefault(require("../service/cach"));
+const services_1 = __importDefault(require("../services"));
+const service = new services_1.default();
 class adminController {
     getContent(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -64,13 +65,7 @@ class adminController {
                 finalData = cacheData;
             }
             else {
-                const lessons = yield lesson_1.default.find().populate({
-                    path: 'sublessons',
-                    populate: {
-                        path: 'contents',
-                        select: 'internalContent',
-                    }
-                });
+                const lessons = yield service.getLessonForAdmin();
                 yield cach_1.default.setter('admin-getLessons', lessons);
                 finalData = lessons;
             }

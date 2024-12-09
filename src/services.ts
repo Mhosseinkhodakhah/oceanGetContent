@@ -111,20 +111,20 @@ export default class contentService {
         // let arabic : {} = 
         // let persian : {} = 
         console.log('in the services')
-        if (!contents){
+        if (!contents) {
             return false
         }
         const englishInternalContent = {
-            title : contents?.internalContent?.eTitle,
-            describtion : contents?.internalContent?.eDescribtion
+            title: contents?.internalContent?.eTitle,
+            describtion: contents?.internalContent?.eDescribtion
         }
         const arabicInternalContent = {
-            title : contents?.internalContent?.aTitle,
-            describtion : contents?.internalContent?.aDescribtion
+            title: contents?.internalContent?.aTitle,
+            describtion: contents?.internalContent?.aDescribtion
         }
         const persianInternalContent = {
-            title : contents?.internalContent?.title,
-            describtion : contents?.internalContent?.describtion
+            title: contents?.internalContent?.title,
+            describtion: contents?.internalContent?.describtion
         }
 
         const englishPicture = contents?.ePictures
@@ -133,12 +133,12 @@ export default class contentService {
 
         console.log('passed here . . .')
 
-        let english = {...contents?.toObject() , internalContent : englishInternalContent , pictures : englishPicture}
-        let arabic = {...contents?.toObject() , internalContent : arabicInternalContent , pictures : arabichPicture}
-        let persian = {...contents?.toObject() , internalContent : persianInternalContent , pictures : persianPicture}
-       
+        let english = { ...contents?.toObject(), internalContent: englishInternalContent, pictures: englishPicture }
+        let arabic = { ...contents?.toObject(), internalContent: arabicInternalContent, pictures: arabichPicture }
+        let persian = { ...contents?.toObject(), internalContent: persianInternalContent, pictures: persianPicture }
 
-        return {persian : persian , english : english , arabic : arabic}
+
+        return { persian: persian, english: english, arabic: arabic }
     }
 
 
@@ -178,6 +178,37 @@ export default class contentService {
         }
         return allLevels
     }
+
+
+
+
+    async getLessonForAdmin() {
+        const lessons = await lessonModel.find()
+        const sublessons = await subLessonModel.find().populate('lesson')
+        let data : {}[] = [];
+        let sub2Lessons : {}[] = []
+        lessons.forEach((element:any)=>{
+            let objectLesson = element.toObject()
+            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : []})
+        })
+        sublessons.forEach((elem:any)=>{
+            let objectData = elem.toObject()
+            let innerSub : {}[] = []
+            if (elem.subLessons.length){
+                elem.subLessons.forEach((elem2:any)=>{
+                    elem2 = elem2.toObject()
+                    sub2Lessons.push({...elem2 , path : [objectData.lesson.name , elem.name , elem2.eName]})
+                })
+            }
+            data.push({...objectData , lesson : [] , subLessons:[] , path : [objectData.lesson.name , elem.name]})
+        })
+        sub2Lessons.forEach((elem3:any)=>{
+            data.push(elem3)
+        })
+        return data;
+    } 
+
+
 
 
 

@@ -201,7 +201,7 @@ export default class contentService {
                     sub2Lessons.push({...elem2 , path : [objectData.lesson.name , elem.name , elem2.eName] ,  state : 2})
                 })
             }
-            data.push({...objectData , lesson : [] , subLessons:[] , path : [objectData.lesson.name , elem.name] ,  state : 1})
+            data.push({...objectData , lesson : [] , path : [objectData.lesson.name , elem.name] ,  state : 1})
         })
         sub2Lessons.forEach((elem3:any)=>{
             data.push(elem3)

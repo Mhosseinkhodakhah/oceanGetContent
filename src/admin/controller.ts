@@ -52,6 +52,20 @@ export default class adminController {
     }
 
 
+    async getLevels(req: any, res: any, next: any) {
+        let cacheData = await cacher.getter('admin-getLevels')
+        let finalData;
+        if (cacheData) {
+            finalData = cacheData
+        } else {
+            const levels = await service.getLevelsForAdmin();
+            await cacher.setter('admin-getLevels', levels)
+            finalData = levels
+        }
+        return next(new response(req, res, 'get levels by admin' , 200 , null , finalData))
+    }
+
+
     async getLessons(req: any, res: any, next: any) {
         let cacheData = await cacher.getter('admin-getLessons')
         let finalData;

@@ -57,6 +57,21 @@ class adminController {
             return next(new responseService_1.response(req, res, 'get specific subLesson', 200, null, subLesson));
         });
     }
+    getLevels(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let cacheData = yield cach_1.default.getter('admin-getLevels');
+            let finalData;
+            if (cacheData) {
+                finalData = cacheData;
+            }
+            else {
+                const levels = yield service.getLevelsForAdmin();
+                yield cach_1.default.setter('admin-getLevels', levels);
+                finalData = levels;
+            }
+            return next(new responseService_1.response(req, res, 'get levels by admin', 200, null, finalData));
+        });
+    }
     getLessons(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             let cacheData = yield cach_1.default.getter('admin-getLessons');

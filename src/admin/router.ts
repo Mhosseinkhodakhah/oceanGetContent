@@ -13,6 +13,8 @@ adminRouter.get('/get-lessons'  , controller.getLessons)
 
 adminRouter.get('/get-sublessons/:sublessonId' , adminAuth , controller.getSubLesson)
 
+adminRouter.get('/get-levels' , controller.getLevels)
+
 adminRouter.get('/get-content/:contentId' , adminAuth , controller.getContent)
 
 

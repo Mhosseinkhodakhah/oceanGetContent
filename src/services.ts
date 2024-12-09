@@ -1,6 +1,7 @@
 import contentModel from "./DB/models/content";
 import lessonModel from "./DB/models/lesson";
 import levelModel from "./DB/models/level";
+import questionModel from "./DB/models/questions";
 import subLessonModel from "./DB/models/subLesson";
 import interConnection from "./interservice/connection";
 
@@ -189,7 +190,7 @@ export default class contentService {
         let sub2Lessons : {}[] = []
         lessons.forEach((element:any)=>{
             let objectLesson = element.toObject()
-            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : []})
+            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : [] , state : 0})
         })
         sublessons.forEach((elem:any)=>{
             let objectData = elem.toObject()
@@ -197,13 +198,39 @@ export default class contentService {
             if (elem.subLessons.length){
                 elem.subLessons.forEach((elem2:any)=>{
                     elem2 = elem2.toObject()
-                    sub2Lessons.push({...elem2 , path : [objectData.lesson.name , elem.name , elem2.eName]})
+                    sub2Lessons.push({...elem2 , path : [objectData.lesson.name , elem.name , elem2.eName] ,  state : 2})
                 })
             }
-            data.push({...objectData , lesson : [] , subLessons:[] , path : [objectData.lesson.name , elem.name]})
+            data.push({...objectData , lesson : [] , subLessons:[] , path : [objectData.lesson.name , elem.name] ,  state : 3})
         })
         sub2Lessons.forEach((elem3:any)=>{
             data.push(elem3)
+        })
+        return data;
+    } 
+
+
+    async getLevelsForAdmin() {
+        const lessons = await lessonModel.find()
+        const levels = await levelModel.find().populate('lesson')
+        const questions = await questionModel.find().populate({
+            path : 'level',
+            populate : {path : 'lesson'}
+        })
+        let data : {}[] = [];
+        let sub2Lessons : {}[] = []
+        lessons.forEach((element:any)=>{
+            let objectLesson = element.toObject()
+            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : []})
+        })
+        levels.forEach((elem:any)=>{
+            let objectData = elem.toObject()
+            let innerSub : {}[] = []
+            data.push({...objectData , lesson : [] ,path : [objectData.lesson.name , elem.number]})
+        })
+        questions.forEach((elem3:any)=>{
+            let objectData = elem3.toObject()
+            data.push({...objectData , path : [objectData?.level?.lesson?.name , objectData?.level?.number , elem3?.questionForm ] ,level : {} })
         })
         return data;
     } 

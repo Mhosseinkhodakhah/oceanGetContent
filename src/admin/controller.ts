@@ -23,7 +23,14 @@ export default class adminController {
             finalData = cacheData
         } else {
             console.log('cache is empty . . .')
-            finalData = await contentModel.findById(req.params.contentId)
+            const content = await contentModel.findById(req.params.contentId)
+            const newC = {
+                ...content?.toObject(), title: content?.internalContent.title, eTitle: content?.internalContent.eTitle, aTitle: content?.internalContent.aTitle, describtion: content?.internalContent.describtion,
+                aDescribtion: content?.internalContent.aDescribtion,
+                eDescribtion: content?.internalContent.eDescribtion,
+                internalContent : {}
+            }
+            finalData = newC
             if (!finalData) {
                 return next(new response(req, res, 'get specific content', 404, 'this content is not exist on database', null))
             }
@@ -62,7 +69,7 @@ export default class adminController {
             await cacher.setter('admin-getLevels', levels)
             finalData = levels
         }
-        return next(new response(req, res, 'get levels by admin' , 200 , null , finalData))
+        return next(new response(req, res, 'get levels by admin', 200, null, finalData))
     }
 
 

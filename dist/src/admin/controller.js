@@ -29,7 +29,9 @@ class adminController {
             }
             else {
                 console.log('cache is empty . . .');
-                finalData = yield content_1.default.findById(req.params.contentId);
+                const content = yield content_1.default.findById(req.params.contentId);
+                const newC = Object.assign(Object.assign({}, content === null || content === void 0 ? void 0 : content.toObject()), { title: content === null || content === void 0 ? void 0 : content.internalContent.title, eTitle: content === null || content === void 0 ? void 0 : content.internalContent.eTitle, aTitle: content === null || content === void 0 ? void 0 : content.internalContent.aTitle, describtion: content === null || content === void 0 ? void 0 : content.internalContent.describtion, aDescribtion: content === null || content === void 0 ? void 0 : content.internalContent.aDescribtion, eDescribtion: content === null || content === void 0 ? void 0 : content.internalContent.eDescribtion, internalContent: {} });
+                finalData = newC;
                 if (!finalData) {
                     return next(new responseService_1.response(req, res, 'get specific content', 404, 'this content is not exist on database', null));
                 }

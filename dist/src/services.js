@@ -190,7 +190,7 @@ class contentService {
                         sub2Lessons.push(Object.assign(Object.assign({}, elem2), { path: [objectData.lesson.name, elem.name, elem2.eName], state: 2 }));
                     });
                 }
-                data.push(Object.assign(Object.assign({}, objectData), { lesson: [], subLessons: [], path: [objectData.lesson.name, elem.name], state: 3 }));
+                data.push(Object.assign(Object.assign({}, objectData), { lesson: [], subLessons: [], path: [objectData.lesson.name, elem.name], state: 1 }));
             });
             sub2Lessons.forEach((elem3) => {
                 data.push(elem3);

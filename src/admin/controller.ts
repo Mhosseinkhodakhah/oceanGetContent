@@ -23,7 +23,7 @@ export default class adminController {
             finalData = cacheData
         } else {
             console.log('cache is empty . . .')
-            finalData = await contentModel.findById(req.params.contentId).populate('subLesson')
+            finalData = await contentModel.findById(req.params.contentId)
             if (!finalData) {
                 return next(new response(req, res, 'get specific content', 404, 'this content is not exist on database', null))
             }

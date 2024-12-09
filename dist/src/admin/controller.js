@@ -29,7 +29,7 @@ class adminController {
             }
             else {
                 console.log('cache is empty . . .');
-                finalData = yield content_1.default.findById(req.params.contentId).populate('subLesson');
+                finalData = yield content_1.default.findById(req.params.contentId);
                 if (!finalData) {
                     return next(new responseService_1.response(req, res, 'get specific content', 404, 'this content is not exist on database', null));
                 }

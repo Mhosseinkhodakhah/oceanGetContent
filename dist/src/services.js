@@ -181,7 +181,7 @@ class contentService {
                 let objectElement = element.toObject();
                 if (objectElement.sublessons.length) {
                     objectElement.sublessons.forEach((element1) => {
-                        let objectElement1 = element1.toObject();
+                        let objectElement1 = element1;
                         if (objectElement1.subLessons.length) {
                             objectElement1.subLessons.forEach((element3) => {
                                 element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.name}`;

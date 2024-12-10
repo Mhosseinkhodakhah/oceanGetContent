@@ -184,8 +184,8 @@ class contentService {
                         let objectElement1 = element1;
                         if (objectElement1.subLessons.length) {
                             objectElement1.subLessons.forEach((element3) => {
-                                element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.name}`;
-                                element3['label'] = element3.name;
+                                element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.eName}`;
+                                element3['label'] = element3.eName;
                                 element3['state'] = 2;
                             });
                         }

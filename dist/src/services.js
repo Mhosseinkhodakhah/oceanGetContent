@@ -190,10 +190,12 @@ class contentService {
                         }
                         element1['id'] = `${objectElement.name}-${objectElement1.name}`;
                         element1['label'] = element1.name;
+                        element1['children'] = element1.subLessons;
                     });
                 }
                 objectElement['id'] = `${objectElement.name}`;
                 objectElement['label'] = objectElement.name;
+                objectElement['children'] = objectElement.sublessons;
                 data.push(objectElement);
             });
             return data;

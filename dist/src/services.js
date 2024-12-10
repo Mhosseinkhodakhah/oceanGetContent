@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const content_1 = __importDefault(require("./DB/models/content"));
 const lesson_1 = __importDefault(require("./DB/models/lesson"));
 const level_1 = __importDefault(require("./DB/models/level"));
-const questions_1 = __importDefault(require("./DB/models/questions"));
 const subLesson_1 = __importDefault(require("./DB/models/subLesson"));
 const connection_1 = __importDefault(require("./interservice/connection"));
 const connection = new connection_1.default();
@@ -206,27 +205,35 @@ class contentService {
     }
     getLevelsForAdmin() {
         return __awaiter(this, void 0, void 0, function* () {
-            const lessons = yield lesson_1.default.find();
-            const levels = yield level_1.default.find().populate('lesson');
-            const questions = yield questions_1.default.find().populate({
-                path: 'level',
-                populate: { path: 'lesson' }
+            const lessons = yield lesson_1.default.find().populate({
+                path: 'levels',
+                populate: {
+                    path: 'questions'
+                }
             });
             let data = [];
-            let sub2Lessons = [];
             lessons.forEach((element) => {
-                let objectLesson = element.toObject();
-                data.push(Object.assign(Object.assign({}, objectLesson), { levels: [], path: [objectLesson.name], sublessons: [] }));
-            });
-            levels.forEach((elem) => {
-                let objectData = elem.toObject();
-                let innerSub = [];
-                data.push(Object.assign(Object.assign({}, objectData), { lesson: [], path: [objectData.lesson.name, elem.number] }));
-            });
-            questions.forEach((elem3) => {
-                var _a, _b, _c;
-                let objectData = elem3.toObject();
-                data.push(Object.assign(Object.assign({}, objectData), { path: [(_b = (_a = objectData === null || objectData === void 0 ? void 0 : objectData.level) === null || _a === void 0 ? void 0 : _a.lesson) === null || _b === void 0 ? void 0 : _b.name, (_c = objectData === null || objectData === void 0 ? void 0 : objectData.level) === null || _c === void 0 ? void 0 : _c.number, elem3 === null || elem3 === void 0 ? void 0 : elem3.questionForm], level: {} }));
+                let objectElement = element.toObject();
+                if (objectElement.levels.length) {
+                    objectElement.levels.forEach((element2) => {
+                        if (element2.questions.length) {
+                            element2.questions.forEach((element3) => {
+                                element3['id'] = `${objectElement.name}-${element2.number}-${element3.questionForm}`;
+                                element3['label'] = element3.questionForm;
+                                element3['state'] = 2;
+                            });
+                        }
+                        element2['id'] = `${objectElement.name}-${element2.number}`;
+                        element2['label'] = element2.number;
+                        element2['state'] = 1;
+                        element2['children'] = element2.questions;
+                    });
+                }
+                objectElement['id'] = `${objectElement.name}`;
+                objectElement['label'] = objectElement.name;
+                objectElement['state'] = 0;
+                objectElement['children'] = objectElement.levels;
+                data.push(objectElement);
             });
             return data;
         });

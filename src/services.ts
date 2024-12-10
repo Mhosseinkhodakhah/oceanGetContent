@@ -188,7 +188,7 @@ export default class contentService {
             path: 'sublessons',
         })
 
-        let data : {}[] = []
+        let data: {}[] = []
 
         lessons.forEach((element: any) => {                                     // layer 1
             let objectElement = element.toObject()
@@ -219,26 +219,35 @@ export default class contentService {
 
 
     async getLevelsForAdmin() {
-        const lessons = await lessonModel.find()
-        const levels = await levelModel.find().populate('lesson')
-        const questions = await questionModel.find().populate({
-            path: 'level',
-            populate: { path: 'lesson' }
+        const lessons = await lessonModel.find().populate({
+            path: 'levels',
+            populate: {
+                path: 'questions'
+            }
         })
-        let data: {}[] = [];
-        let sub2Lessons: {}[] = []
-        lessons.forEach((element: any) => {
-            let objectLesson = element.toObject()
-            data.push({ ...objectLesson, levels: [], path: [objectLesson.name], sublessons: [] })
-        })
-        levels.forEach((elem: any) => {
-            let objectData = elem.toObject()
-            let innerSub: {}[] = []
-            data.push({ ...objectData, lesson: [], path: [objectData.lesson.name, elem.number] })
-        })
-        questions.forEach((elem3: any) => {
-            let objectData = elem3.toObject()
-            data.push({ ...objectData, path: [objectData?.level?.lesson?.name, objectData?.level?.number, elem3?.questionForm], level: {} })
+        let data: {}[] = []
+        lessons.forEach((element: any) => {              // layer 1
+            let objectElement = element.toObject()
+            if (objectElement.levels.length) {
+                objectElement.levels.forEach((element2: any) => {        // layer 2
+                    if (element2.questions.length) {
+                        element2.questions.forEach((element3: any) => {      // layer 3
+                            element3['id'] = `${objectElement.name}-${element2.number}-${element3.questionForm}`
+                            element3['label'] = element3.questionForm
+                            element3['state'] = 2
+                        })
+                    }
+                    element2['id'] = `${objectElement.name}-${element2.number}`
+                    element2['label'] = element2.number
+                    element2['state'] = 1
+                    element2['children'] = element2.questions
+                })
+            }
+            objectElement['id'] = `${objectElement.name}`
+            objectElement['label'] = objectElement.name
+            objectElement['state'] = 0
+            objectElement['children'] = objectElement.levels
+            data.push(objectElement)
         })
         return data;
     }

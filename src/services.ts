@@ -199,15 +199,18 @@ export default class contentService {
                         objectElement1.subLessons.forEach((element3: any) => {                         // layer 3
                             element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.name}`
                             element3['label'] = element3.name
+                            element3['state'] = 2
                         })
                     }
                     element1['id'] = `${objectElement.name}-${objectElement1.name}`
                     element1['label'] = element1.name
+                    element1['state'] = 1
                     element1['children'] = element1.subLessons
                 })
             }
             objectElement['id'] = `${objectElement.name}`
             objectElement['label'] = objectElement.name
+            objectElement['state'] = 0
             objectElement['children'] = objectElement.sublessons
             data.push(objectElement)
         })

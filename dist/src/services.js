@@ -173,27 +173,28 @@ class contentService {
     }
     getLessonForAdmin() {
         return __awaiter(this, void 0, void 0, function* () {
-            const lessons = yield lesson_1.default.find();
-            const sublessons = yield subLesson_1.default.find().populate('lesson');
-            let data = [];
-            let sub2Lessons = [];
-            lessons.forEach((element) => {
-                let objectLesson = element.toObject();
-                data.push(Object.assign(Object.assign({}, objectLesson), { levels: [], path: [objectLesson.name], sublessons: [], state: 0 }));
+            const lessons = yield lesson_1.default.find().populate({
+                path: 'sublessons',
             });
-            sublessons.forEach((elem) => {
-                let objectData = elem.toObject();
-                let innerSub = [];
-                if (elem.subLessons.length) {
-                    elem.subLessons.forEach((elem2) => {
-                        elem2 = elem2.toObject();
-                        sub2Lessons.push(Object.assign(Object.assign({}, elem2), { path: [objectData.lesson.name, elem.name, elem2.eName], state: 2 }));
+            let data = [];
+            lessons.forEach((element) => {
+                let objectElement = element.toObject();
+                if (objectElement.sublessons.length) {
+                    objectElement.sublessons.forEach((element1) => {
+                        let objectElement1 = element1.toObject();
+                        if (objectElement1.subLessons.length) {
+                            objectElement1.subLessons.forEach((element3) => {
+                                element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.name}`;
+                                element3['label'] = element3.name;
+                            });
+                        }
+                        element1['id'] = `${objectElement.name}-${objectElement1.name}`;
+                        element1['label'] = element1.name;
                     });
                 }
-                data.push(Object.assign(Object.assign({}, objectData), { lesson: [], path: [objectData.lesson.name, elem.name], state: 1 }));
-            });
-            sub2Lessons.forEach((elem3) => {
-                data.push(elem3);
+                objectElement['id'] = `${objectElement.name}`;
+                objectElement['label'] = objectElement.name;
+                data.push(objectElement);
             });
             return data;
         });

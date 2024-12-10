@@ -184,56 +184,59 @@ export default class contentService {
 
 
     async getLessonForAdmin() {
-        const lessons = await lessonModel.find()
-        const sublessons = await subLessonModel.find().populate('lesson')
-        let data : {}[] = [];
-        let sub2Lessons : {}[] = []
-        lessons.forEach((element:any)=>{
-            let objectLesson = element.toObject()
-            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : [] , state : 0})
+        const lessons = await lessonModel.find().populate({
+            path: 'sublessons',
         })
-        sublessons.forEach((elem:any)=>{
-            let objectData = elem.toObject()
-            let innerSub : {}[] = []
-            if (elem.subLessons.length){
-                elem.subLessons.forEach((elem2:any)=>{
-                    elem2 = elem2.toObject()
-                    sub2Lessons.push({...elem2 , path : [objectData.lesson.name , elem.name , elem2.eName] ,  state : 2})
+
+        let data : {}[] = []
+
+        lessons.forEach((element: any) => {                                     // layer 1
+            let objectElement = element.toObject()
+            if (objectElement.sublessons.length) {
+                objectElement.sublessons.forEach((element1: any) => {                                                    // layer 2
+                    let objectElement1 = element1.toObject()
+                    if (objectElement1.subLessons.length) {
+                        objectElement1.subLessons.forEach((element3: any) => {                         // layer 3
+                            element3['id'] = `${objectElement.name}-${objectElement1.name}-${element3.name}`
+                            element3['label'] = element3.name
+                        })
+                    }
+                    element1['id'] = `${objectElement.name}-${objectElement1.name}`
+                    element1['label'] = element1.name
                 })
             }
-            data.push({...objectData , lesson : [] , path : [objectData.lesson.name , elem.name] ,  state : 1})
-        })
-        sub2Lessons.forEach((elem3:any)=>{
-            data.push(elem3)
+            objectElement['id'] = `${objectElement.name}`
+            objectElement['label'] = objectElement.name
+            data.push(objectElement)
         })
         return data;
-    } 
+    }
 
 
     async getLevelsForAdmin() {
         const lessons = await lessonModel.find()
         const levels = await levelModel.find().populate('lesson')
         const questions = await questionModel.find().populate({
-            path : 'level',
-            populate : {path : 'lesson'}
+            path: 'level',
+            populate: { path: 'lesson' }
         })
-        let data : {}[] = [];
-        let sub2Lessons : {}[] = []
-        lessons.forEach((element:any)=>{
+        let data: {}[] = [];
+        let sub2Lessons: {}[] = []
+        lessons.forEach((element: any) => {
             let objectLesson = element.toObject()
-            data.push({...objectLesson ,levels : [], path : [objectLesson.name] , sublessons : []})
+            data.push({ ...objectLesson, levels: [], path: [objectLesson.name], sublessons: [] })
         })
-        levels.forEach((elem:any)=>{
+        levels.forEach((elem: any) => {
             let objectData = elem.toObject()
-            let innerSub : {}[] = []
-            data.push({...objectData , lesson : [] ,path : [objectData.lesson.name , elem.number]})
+            let innerSub: {}[] = []
+            data.push({ ...objectData, lesson: [], path: [objectData.lesson.name, elem.number] })
         })
-        questions.forEach((elem3:any)=>{
+        questions.forEach((elem3: any) => {
             let objectData = elem3.toObject()
-            data.push({...objectData , path : [objectData?.level?.lesson?.name , objectData?.level?.number , elem3?.questionForm ] ,level : {} })
+            data.push({ ...objectData, path: [objectData?.level?.lesson?.name, objectData?.level?.number, elem3?.questionForm], level: {} })
         })
         return data;
-    } 
+    }
 
 
 

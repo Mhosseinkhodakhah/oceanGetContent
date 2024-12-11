@@ -219,24 +219,24 @@ export default class contentService {
 
 
     async getLevelsForAdmin() {
+        // const lessons = await levelModel.find().populate({path : 'lesson' })
         const lessons = await lessonModel.find().populate({
             path: 'levels',
-            populate: {
-                path: 'questions'
-            }
         })
+        
+        console.log('data cached ' , lessons)
         let data: {}[] = []
         lessons.forEach((element: any) => {              // layer 1
             let objectElement = element.toObject()
             if (objectElement.levels.length) {
                 objectElement.levels.forEach((element2: any) => {        // layer 2
-                    if (element2.questions.length) {
-                        element2.questions.forEach((element3: any) => {      // layer 3
-                            element3['id'] = `${objectElement.name}-${element2.number}-${element3.questionForm}`
-                            element3['label'] = element3.questionForm
-                            element3['state'] = 2
-                        })
-                    }
+                    // if (element2.questions.length) {
+                    //     element2.questions.forEach((element3: any) => {      // layer 3
+                    //         element3['id'] = `${objectElement.name}-${element2.number}-${element3.questionForm}`
+                    //         element3['label'] = element3.questionForm
+                    //         element3['state'] = 2
+                    //     })
+                    // }
                     element2['id'] = `${objectElement.name}-${element2.number}`
                     element2['label'] = element2.number
                     element2['state'] = 1

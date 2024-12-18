@@ -30,7 +30,7 @@ class adminController {
             else {
                 console.log('cache is empty . . .');
                 const content = yield content_1.default.findById(req.params.contentId);
-                finalData = content;
+                finalData = content === null || content === void 0 ? void 0 : content.toObject();
                 if (!finalData) {
                     return next(new responseService_1.response(req, res, 'get specific content', 404, 'this content is not exist on database', null));
                 }

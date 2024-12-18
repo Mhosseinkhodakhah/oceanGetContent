@@ -221,7 +221,7 @@ export default class contentService {
     async getLevelsForAdmin() {
         // const lessons = await levelModel.find().populate({path : 'lesson' })
         const lessons = await lessonModel.find().populate({
-            path: 'levels'
+            path: 'levels',
         })
         
         console.log('data cached ' , lessons)

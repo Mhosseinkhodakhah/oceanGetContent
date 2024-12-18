@@ -24,13 +24,7 @@ export default class adminController {
         } else {
             console.log('cache is empty . . .')
             const content = await contentModel.findById(req.params.contentId)
-            const newC = {
-                ...content?.toObject(), title: content?.internalContent.title, eTitle: content?.internalContent.eTitle, aTitle: content?.internalContent.aTitle, describtion: content?.internalContent.describtion,
-                aDescribtion: content?.internalContent.aDescribtion,
-                eDescribtion: content?.internalContent.eDescribtion,
-                internalContent : {}
-            }
-            finalData = newC
+            finalData = content
             if (!finalData) {
                 return next(new response(req, res, 'get specific content', 404, 'this content is not exist on database', null))
             }

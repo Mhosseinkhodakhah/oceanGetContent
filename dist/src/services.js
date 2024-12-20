@@ -208,6 +208,9 @@ class contentService {
             // const lessons = await levelModel.find().populate({path : 'lesson' })
             const lessons = yield lesson_1.default.find().populate({
                 path: 'levels',
+                options: {
+                    sort: { 'number': 1 }
+                }
             });
             console.log('data cached ', lessons);
             let data = [];

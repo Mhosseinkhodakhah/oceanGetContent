@@ -222,6 +222,9 @@ export default class contentService {
         // const lessons = await levelModel.find().populate({path : 'lesson' })
         const lessons = await lessonModel.find().populate({
             path: 'levels',
+            options : {
+                sort : {'number' : 1}
+            }
         })
         
         console.log('data cached ' , lessons)
